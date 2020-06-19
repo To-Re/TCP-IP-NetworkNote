@@ -308,7 +308,9 @@ Network ordered integer addr: 0x4f7ce87f
 将网络字节序 IP 地址转化为我们熟悉的字符串形式。
 
 ```cpp
-
+#include <arpa/inet.h>
+char *inet_ntoa(struct in_addr adr);
+// 成功时返回转换的字符串地址值，失败时返回-1
 ```
 
 返回的值需要长期保存，则应将字符串复制到其他内存空间。
