@@ -85,7 +85,12 @@ optlen：向第四个参数 optval 传递的可选项信息的字节数。
 **运行结果**
 
 ```
-
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-09$ gcc sock_type.c -o socktype.exe
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-09$ ./socktype.exe
+SOCK_STREAM: 1
+SOCK_DGRAM: 2
+Socket type one: 1 
+Socket type two: 2
 ```
 
 TCP 套接字获得，SOCK_STREAM 常数值是 1；
