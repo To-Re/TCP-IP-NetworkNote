@@ -422,16 +422,100 @@ sigaction 同时收到两个子进程结束消息，为什么只触发一次函
 
 ### 10.4.2 实现并发服务器
 
-待
+下面给出并发回声服务器端的实现代码，服务端代码参考 `echo_mpserv.c` 文件，客户端代码参考 `chapter-04/echo_client.c` 文件
+
+**运行结果**
+
+```
+# 下面给出服务端运行结果，客户端略，可见可以同时进行多个连接服务。
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-10$ gcc echo_mpserv.c -o eserver.exe
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-10$ ./eserver.exe 9190
+new client connected...
+client disconnected...
+removed proc id: 73702 
+new client connected...
+new client connected...
+client disconnected...
+removed proc id: 73730 
+client disconnected...
+removed proc id: 73705
+```
 
 
 
 ### 10.4.3 通过 fork 函数复制文件描述符
 
+Q：上述 10.4.2 代码，复制了文件描述符，是否复制了套接字？
+
+A：没有，套接字属于操作系统，且如果复制套接字，那么同一端口将对应多个套接字。所以 fork 之后仅仅是复制了文件描述符。父子进程文件描述符指向同一套接字。
+
+
+
+1 个套接字存在 2 个文件描述符时，只有 2 个文件描述符都终止（销毁）后，才能销毁套接字。因此 fork 后，要将无关套接字文件描述符关掉。
+
+
+
 ## 10.5 分割 TCP 的 I/O 程序
 
 ### 10.5.1 分割 I/O 程序的优点
 
+一种分割模型，如修改客户端代码，父进程负责接收数据，额外创建的子进程负责发送数据。这样无论客户端是否从服务器端接收完数据都可以进行传输。
+
+分割 I/O 程序的好处：
+
++ 某些情况可以简化程序实现
++ 提高频繁交换数据的程序性能。（类似流水线）
+
+
+
 ### 10.5.2 回声客户端的 I/O 程序分割
 
+I/O 程序分割的回声客户端实现，代码参考 `echo_mpclient.c` 文件。服务端采用 10.4.2 代码。
+
+**运行结果**
+
+```
+# 客户端运行结果
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-10$ ./eclient.exe 127.0.0.1 9190
+1
+Message from server: 1
+2
+Message from server: 2
+q
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-10$ 
+```
+
+
+
 ## 10.6 习题
+
+以下是我的理解，详细题目参照原书
+
+1. 下列关于进程的说法错误的是？
+
+> b、c
+
+
+
+2. 调用 fork 函数将创建子进程，以下关于子进程的描述错误的是？
+
+> a、c、d
+
+
+
+3. 创建子进程时复制父进程所有内容，此时复制对象也包含套接字文件描述符。编写程序验证赋值的文件描述符整数值是否与原文件描述符数值相同。
+
+> 没写程序，结论是应该一样
+
+
+
+4. 请说明进程变为僵尸进程的过程以及预防措施。
+
+> 子进程结束时，其实没有被真正的销毁，留下一个『僵尸进程』。需要父进程已经结束或调用 `wait` or `waitpid` 函数
+
+
+
+5. 程序题
+
+> 略
+
