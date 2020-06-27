@@ -116,12 +116,20 @@ Second file descriptor: 3
 
 ```
 # 服务器端
-gcc echo_stdserv.c -o ess.exe
-./ess.exe 9190
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-15$ gcc echo_stdserv.c -o ess.exe
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-15$ ./ess.exe 9190
+Connect client 1 
+^C
 
 # 客户端
-gcc echo_stdclient.c -o esc.exe
-./esc.exe 127.0.0.1 9190
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-15$ gcc echo_stdclient.c -o esc.exe
+wzy@wzypc:~/TCP-IP-NetworkNote/chapter-15$ ./esc.exe 127.0.0.1 9190
+Connected...
+Input message(Q to quit): 2
+Message from server: 2
+Input message(Q to quit): 3
+Message from server: 3
+Input message(Q to quit): ^C
 ```
 
 回声服务端，书上说好对着第四章改，不知道怎么没了关闭客户端连接。
